@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' http://* 'unsafe-inline';
+         script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css">
+        <title>Trabalho</title>
+    </head>
+    <body>
+
+      <div class="container" id="app">
+        <header>
+          <h1>Trabalho <br />ApacheCordova</h1>
+        </header>
+
+        <ul class="usuarios">
+
+        </ul>
+      </div>
+
+      <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+      <script>
+      $(document).ready(function () {
+        var lista = $(".usuarios");
+        $.ajax({
+          type : "GET",
+          dataType : "json",
+          url : "http://desen.md.utfpr.edu.br/sobjak/webapp-vraptor-costura/api/pessoa",
+          success: function(data) {
+            $.each(data, function(i, el){
+              lista.append("<li><strong>" + el.nome + "</strong><p>" + el.email + "</p><em hidden>"+ el.id +"</em></li>")
+            });
+
+            $(".usuarios li").click(function() {
+              var mensagem = "ID: " + $(this).find("em").text() + "\nE-mail: " + $(this).find("p").text();
+              var titulo = $(this).find("strong").text();
+              var botao = "Ok";
+
+              funDialog(mensagem, titulo, botao);
+            });
+          }
+        });
+
+      });
+
+      function funDialog(mensagem, titulo, botao) {
+        navigator.notification.alert(mensagem, funClose, titulo, botao);
+      }
+      function funClose() {
+
+      }
+      </script>
+    </body>
+</html>
